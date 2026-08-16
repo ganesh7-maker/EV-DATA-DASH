@@ -131,7 +131,24 @@ c:\EV DATA DASH\
 
 ---
 
-## 🚀 How to Run the Platform
-1. Open `app/index.html` directly in any modern browser OR run `node app/server.js` and navigate to `http://localhost:3000`.
-2. Explore the tabs: Executive Dashboard, Battery Health, Charging Analytics, Fleet Performance, Cost Analysis, AI Dashboard, and Data Governance.
-3. Interact with the AI Assistant console on the AI Dashboard tab!
+## 🚀 How to Run the Platform & Streamlit Live Demo
+
+### ⚡ Streamlit Live Demo (Recommended)
+1. Launch the Streamlit Live Demo:
+   ```bash
+   streamlit run streamlit_app.py --server.port 8501
+   ```
+2. Access the live interactive demo at: **`http://localhost:8501`**
+3. Features 7 dark-themed glassmorphism tabs:
+   - 📊 **Executive Overview**: High-level KPIs, Fleet Health Distribution & Cost by Location.
+   - 🔋 **Battery Health**: SOH vs Temp scatter analysis, fast-charging degradation histogram & maintenance alert matrix.
+   - ⚡ **Charging Operations**: Infrastructure type utilization & top station energy consumption.
+   - 🚗 **Fleet Performance**: Model benchmarking & efficiency matrix.
+   - 💰 **Cost & Energy**: Interactive peak-shifting cost savings calculator.
+   - 🤖 **AI Assistant & Predictor**: Natural language query console & ML SOH degradation slider predictor.
+   - 🛡️ **Data Governance**: RBAC matrix, encryption compliance & live audit trail logger.
+
+### 🌐 HTML/JS Node Web App
+1. Open `app/index.html` directly in any modern browser OR run `python run_web_app.py` / `node app/server.js` and navigate to `http://localhost:3000`.
+2. Explore the dark blue enterprise dashboard tabs and natural language query assistant!
+
