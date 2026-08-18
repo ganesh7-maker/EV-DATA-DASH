@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCharts();
     initAIAssistant();
     startLiveTelemetryStream();
+    initMobileNavigation();
 });
 
 // 1. Theme Toggle Logic (Light / Dark Mode Switcher)
@@ -1188,6 +1189,193 @@ window.exportFleetDataCSV = function() {
     link.click();
     document.body.removeChild(link);
 };
+
+// ============================================================================
+// MOBILE NAVIGATION & NETWORK QR CODE MODAL CONTROLLER
+// ============================================================================
+function initMobileNavigation() {
+    const hamburgerBtn = document.getElementById('mobileHamburgerBtn');
+    const drawer = document.getElementById('mobileDrawer');
+    const backdrop = document.getElementById('mobileDrawerBackdrop');
+    const closeBtn = document.getElementById('drawerCloseBtn');
+    
+    const qrBtnTop = document.getElementById('mobileQrBtn');
+    const qrBtnDrawer = document.getElementById('drawerQrBtn');
+    const modalBackdrop = document.getElementById('mobileQrModalBackdrop');
+    const modalCloseBtn = document.getElementById('mobileQrCloseBtn');
+    const copyBtn = document.getElementById('copyIpBtn');
+
+    // Hamburger Open / Close
+    function openDrawer() {
+        if (drawer) drawer.classList.add('active');
+        if (backdrop) backdrop.classList.add('active');
+        if (hamburgerBtn) hamburgerBtn.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+        if (drawer) drawer.classList.remove('active');
+        if (backdrop) backdrop.classList.remove('active');
+        if (hamburgerBtn) hamburgerBtn.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    if (hamburgerBtn) hamburgerBtn.addEventListener('click', () => {
+        if (drawer && drawer.classList.contains('active')) {
+            closeDrawer();
+        } else {
+            openDrawer();
+        }
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    if (backdrop) backdrop.addEventListener('click', closeDrawer);
+
+    // Mobile Drawer Navigation Item Clicks
+    const drawerItems = document.querySelectorAll('.drawer-nav-item');
+    drawerItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            const targetTab = item.getAttribute('data-tab-target');
+            if (targetTab) {
+                const tabBtn = document.querySelector(`.tab-btn[data-tab="${targetTab}"]`);
+                if (tabBtn) tabBtn.click();
+            }
+            closeDrawer();
+        });
+    });
+
+    // Mobile Drawer Action Buttons
+    const drawerRoleCompany = document.getElementById('drawerRoleCompany');
+    const drawerRoleDriver = document.getElementById('drawerRoleDriver');
+    const drawerThemeToggle = document.getElementById('drawerThemeToggle');
+
+    if (drawerRoleCompany) drawerRoleCompany.addEventListener('click', () => {
+        const btn = document.getElementById('roleCompanyBtn');
+        if (btn) btn.click();
+        closeDrawer();
+    });
+
+    if (drawerRoleDriver) drawerRoleDriver.addEventListener('click', () => {
+        const btn = document.getElementById('roleDriverBtn');
+        if (btn) btn.click();
+        closeDrawer();
+    });
+
+    if (drawerThemeToggle) drawerThemeToggle.addEventListener('click', () => {
+        const btn = document.getElementById('themeToggleBtn');
+        if (btn) btn.click();
+    });
+
+    // Mobile QR Modal Triggering
+    if (qrBtnTop) qrBtnTop.addEventListener('click', openMobileQrModal);
+    if (qrBtnDrawer) qrBtnDrawer.addEventListener('click', () => {
+        closeDrawer();
+        openMobileQrModal();
+    });
+
+    if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeMobileQrModal);
+    if (modalBackdrop) modalBackdrop.addEventListener('click', (e) => {
+        if (e.target === modalBackdrop) closeMobileQrModal();
+    });
+
+    if (copyBtn) copyBtn.addEventListener('click', copyMobileUrl);
+}
+
+function openMobileQrModal() {
+    const modalBackdrop = document.getElementById('mobileQrModalBackdrop');
+    if (!modalBackdrop) return;
+    modalBackdrop.classList.add('active');
+
+    const input = document.getElementById('mobileUrlInput');
+    const canvasContainer = document.getElementById('qrcodeCanvas');
+    const loadingText = document.getElementById('qrLoadingText');
+
+    if (canvasContainer) canvasContainer.innerHTML = '';
+    if (loadingText) loadingText.style.display = 'block';
+
+    // Fetch local network IP from Python backend /api/ip
+    fetch('/api/ip')
+        .then(res => res.json())
+        .then(data => {
+            const url = data.url || `http://${window.location.hostname}:${window.location.port || 3000}`;
+            if (input) input.value = url;
+            generateQrCode(url);
+        })
+        .catch(() => {
+            const hostname = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                ? '192.168.1.5'
+                : window.location.hostname;
+            const fallbackUrl = `http://${hostname}:${window.location.port || 3000}`;
+            if (input) input.value = fallbackUrl;
+            generateQrCode(fallbackUrl);
+        });
+}
+
+function closeMobileQrModal() {
+    const modalBackdrop = document.getElementById('mobileQrModalBackdrop');
+    if (modalBackdrop) modalBackdrop.classList.remove('active');
+}
+
+function generateQrCode(textUrl) {
+    const canvasContainer = document.getElementById('qrcodeCanvas');
+    const loadingText = document.getElementById('qrLoadingText');
+    if (!canvasContainer) return;
+
+    canvasContainer.innerHTML = '';
+
+    if (typeof QRCode !== 'undefined' && QRCode.toCanvas) {
+        const canvas = document.createElement('canvas');
+        QRCode.toCanvas(canvas, textUrl, {
+            width: 200,
+            margin: 2,
+            color: {
+                dark: '#030712',
+                light: '#FFFFFF'
+            }
+        }, (err) => {
+            if (loadingText) loadingText.style.display = 'none';
+            if (!err) {
+                canvasContainer.appendChild(canvas);
+            }
+        });
+    } else {
+        if (loadingText) loadingText.style.display = 'none';
+        const img = document.createElement('img');
+        img.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(textUrl)}&color=030712&bgcolor=ffffff`;
+        img.alt = 'Mobile Access QR Code';
+        img.width = 200;
+        img.height = 200;
+        canvasContainer.appendChild(img);
+    }
+}
+
+function copyMobileUrl() {
+    const input = document.getElementById('mobileUrlInput');
+    const copyBtn = document.getElementById('copyIpBtn');
+    if (!input) return;
+
+    input.select();
+    input.setSelectionRange(0, 99999);
+    
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(input.value);
+    } else {
+        document.execCommand('copy');
+    }
+
+    if (copyBtn) {
+        const original = copyBtn.innerText;
+        copyBtn.innerText = 'Copied! ✓';
+        copyBtn.style.background = '#10B981';
+        copyBtn.style.color = '#FFFFFF';
+        setTimeout(() => {
+            copyBtn.innerText = original;
+            copyBtn.style.background = '';
+            copyBtn.style.color = '';
+        }, 2000);
+    }
+}
+
 
 
 

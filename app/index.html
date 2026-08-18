@@ -3,8 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#00F0FF">
     <title>EV Fleet Charging & Battery Health Analytics Platform - Web Application</title>
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="styles.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
@@ -13,6 +17,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 </head>
 
 <body>
@@ -28,6 +33,7 @@
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
                 </button>
+                <button class="top-util-btn mobile-qr-trigger-btn" id="mobileQrBtn" title="Open Mobile Access & QR Code">📱 MOBILE QR</button>
                 <a href="#tab-executive" onclick="document.querySelector('[data-tab=\'tab-executive\']').click()"
                     class="top-util-link">EXECUTIVE SUMMARY</a>
                 <a href="#tab-governance" onclick="document.querySelector('[data-tab=\'tab-governance\']').click()"
@@ -46,6 +52,12 @@
                         PLATFORM</span></h1>
             </div>
         </div>
+
+        <button class="mobile-hamburger-btn" id="mobileHamburgerBtn" aria-label="Toggle Mobile Navigation Menu">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
 
         <nav class="main-nav-links">
             <!-- Dropdown 1: ABOUT & OVERVIEW -->
@@ -140,6 +152,46 @@
                 class="cta-pill-btn">LAUNCH EV CAR COCKPIT</a>
         </nav>
     </header>
+
+    <!-- Mobile Slide-out Drawer Overlay Navigation -->
+    <div class="mobile-drawer-backdrop" id="mobileDrawerBackdrop"></div>
+    <div class="mobile-drawer" id="mobileDrawer">
+        <div class="drawer-header">
+            <div class="drawer-brand">
+                <span class="drawer-icon">⚡</span>
+                <span class="drawer-title">EV FLEET ANALYTICS</span>
+            </div>
+            <button class="drawer-close-btn" id="drawerCloseBtn" aria-label="Close Menu">&times;</button>
+        </div>
+
+        <div class="drawer-mobile-qr-card">
+            <div class="drawer-qr-info">
+                <span class="qr-badge">📱 Mobile Access</span>
+                <span class="qr-text">Scan with phone camera to open on mobile</span>
+            </div>
+            <button class="drawer-qr-btn" id="drawerQrBtn">Open Mobile QR & IP</button>
+        </div>
+
+        <div class="drawer-nav-section">
+            <div class="drawer-section-title">NAVIGATION TABS</div>
+            <a href="#tab-executive" class="drawer-nav-item" data-tab-target="tab-executive">📊 Executive Overview</a>
+            <a href="#tab-battery" class="drawer-nav-item" data-tab-target="tab-battery">🔋 Battery Health (SOH)</a>
+            <a href="#tab-simulator" class="drawer-nav-item" data-tab-target="tab-simulator">🚘 EV Driver Cockpit</a>
+            <a href="#tab-charging" class="drawer-nav-item" data-tab-target="tab-charging">⚡ Charging Sessions & Rates</a>
+            <a href="#tab-fleet" class="drawer-nav-item" data-tab-target="tab-fleet">🚛 Fleet Utilization & Dispatch</a>
+            <a href="#tab-map" class="drawer-nav-item" data-tab-target="tab-map">🗺️ Live GPS Telemetry Map</a>
+            <a href="#tab-cost" class="drawer-nav-item" data-tab-target="tab-cost">💰 Energy Savings & Cost</a>
+            <a href="#tab-governance" class="drawer-nav-item" data-tab-target="tab-governance">🛡️ Snowflake & Governance</a>
+            <a href="#tab-ai" class="drawer-nav-item" data-tab-target="tab-ai">🤖 AI Battery Degradation ML</a>
+        </div>
+
+        <div class="drawer-nav-section">
+            <div class="drawer-section-title">ROLES & CONTROLS</div>
+            <button class="drawer-action-btn" id="drawerRoleCompany">🏢 Enterprise Fleet View</button>
+            <button class="drawer-action-btn" id="drawerRoleDriver">⚡ EV Driver Cockpit View</button>
+            <button class="drawer-action-btn" id="drawerThemeToggle">🌙 Toggle Dark / Light Theme</button>
+        </div>
+    </div>
 
     <!-- Hero Banner Section matching user's reference picture -->
     <section class="hero-section">
@@ -1309,6 +1361,33 @@
                 <p class="cookie-subtext">To learn more, click <a href="#" class="cookie-link">here</a>.</p>
             </div>
             <button id="acceptCookieBtn" class="accept-btn">ACCEPT</button>
+        </div>
+
+        <!-- Mobile QR Code & Local Wi-Fi Access Modal -->
+        <div class="mobile-qr-modal-backdrop" id="mobileQrModalBackdrop">
+            <div class="mobile-qr-modal">
+                <button class="modal-close-icon" id="mobileQrCloseBtn" aria-label="Close Modal">&times;</button>
+                <div class="modal-header-icon">📱</div>
+                <h2 class="modal-title">Open Platform on Mobile</h2>
+                <p class="modal-subtitle">Connect your mobile device to the <strong>same Wi-Fi network</strong> as this computer, then scan the QR code below or enter the URL into your phone's browser.</p>
+                
+                <div class="qr-canvas-wrapper">
+                    <div id="qrcodeCanvas"></div>
+                    <span class="qr-loading-text" id="qrLoadingText">Detecting Local Network IP...</span>
+                </div>
+
+                <div class="mobile-ip-box">
+                    <span class="ip-label">Wi-Fi Network URL:</span>
+                    <div class="ip-input-row">
+                        <input type="text" id="mobileUrlInput" readonly value="http://localhost:3000">
+                        <button class="copy-ip-btn" id="copyIpBtn">Copy Link</button>
+                    </div>
+                </div>
+
+                <div class="pwa-hint">
+                    💡 <strong>Pro-Tip:</strong> Once opened on your phone, select <em>"Add to Home Screen"</em> in Safari (iOS) or Chrome (Android) to run it as a standalone app!
+                </div>
+            </div>
         </div>
 
         <script src="app.js"></script>

@@ -247,7 +247,7 @@ Distan...</DefaultAnnotationText>
             <UNCLocal>False</UNCLocal>
             <SkipFieldNames>False</SkipFieldNames>
             <SuppressBlankFile>False</SuppressBlankFile>
-            <OutputOption>Create</OutputOption>
+            <OutputOption>Overwrite</OutputOption>
           </FormatSpecificOptions>
           <MultiFile value="False" />
         </Configuration>
@@ -257,6 +257,9 @@ Distan...</DefaultAnnotationText>
 Query=Sheet1</DefaultAnnotationText>
           <Left value="False" />
         </Annotation>
+        <Dependencies>
+          <Implicit />
+        </Dependencies>
       </Properties>
       <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxDbFileOutput" />
     </Node>

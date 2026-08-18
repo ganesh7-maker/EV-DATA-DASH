@@ -2134,6 +2134,540 @@ body {
     font-weight: 700;
 }
 
+/* ============================================================================
+   MOBILE HAMBURGER BUTTON & SLIDE-OUT DRAWER OVERLAY NAVIGATION
+   ============================================================================ */
+
+.mobile-hamburger-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 32px;
+    height: 22px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+}
+
+.hamburger-line {
+    width: 100%;
+    height: 3px;
+    background: #00F0FF;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.mobile-hamburger-btn.active .hamburger-line:nth-child(1) {
+    transform: translateY(9.5px) rotate(45deg);
+}
+
+.mobile-hamburger-btn.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-hamburger-btn.active .hamburger-line:nth-child(3) {
+    transform: translateY(-9.5px) rotate(-45deg);
+}
+
+.top-util-btn.mobile-qr-trigger-btn {
+    background: rgba(0, 240, 255, 0.15);
+    color: #00F0FF;
+    border: 1px solid rgba(0, 240, 255, 0.4);
+    font-weight: 700;
+    padding: 0.3rem 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.top-util-btn.mobile-qr-trigger-btn:hover {
+    background: #00F0FF;
+    color: #030712;
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+}
+
+/* Slide-Out Drawer Overlay */
+.mobile-drawer-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.mobile-drawer-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mobile-drawer {
+    position: fixed;
+    top: 0;
+    right: -320px;
+    width: 300px;
+    height: 100vh;
+    background: #060B18;
+    border-left: 1px solid rgba(0, 240, 255, 0.3);
+    z-index: 2001;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    overflow-y: auto;
+    transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.8);
+}
+
+.mobile-drawer.active {
+    right: 0;
+}
+
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.drawer-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.drawer-icon {
+    font-size: 1.4rem;
+}
+
+.drawer-title {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #00F0FF;
+    letter-spacing: 1px;
+}
+
+.drawer-close-btn {
+    background: transparent;
+    border: none;
+    color: #94A3B8;
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.drawer-mobile-qr-card {
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(16, 185, 129, 0.1));
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.qr-badge {
+    background: #00F0FF;
+    color: #030712;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    display: inline-block;
+    width: fit-content;
+}
+
+.qr-text {
+    font-size: 0.78rem;
+    color: #CBD5E1;
+}
+
+.drawer-qr-btn {
+    background: linear-gradient(135deg, #00F0FF, #0284C7);
+    color: #030712;
+    border: none;
+    padding: 0.55rem;
+    border-radius: 8px;
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 240, 255, 0.3);
+}
+
+.drawer-nav-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.drawer-section-title {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: #64748B;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.25rem;
+}
+
+.drawer-nav-item {
+    color: #E2E8F0;
+    text-decoration: none;
+    padding: 0.65rem 0.85rem;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+}
+
+.drawer-nav-item:hover {
+    background: rgba(0, 240, 255, 0.12);
+    color: #00F0FF;
+    border-color: rgba(0, 240, 255, 0.3);
+}
+
+.drawer-action-btn {
+    background: rgba(15, 23, 42, 0.8);
+    color: #38BDF8;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 0.65rem 0.85rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+}
+
+.drawer-action-btn:hover {
+    background: #38BDF8;
+    color: #030712;
+}
+
+/* ============================================================================
+   MOBILE QR CODE & LOCAL WI-FI NETWORK ACCESS MODAL
+   ============================================================================ */
+
+.mobile-qr-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.82);
+    backdrop-filter: blur(10px);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.mobile-qr-modal-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mobile-qr-modal {
+    background: #080D1C;
+    border: 1px solid rgba(0, 240, 255, 0.4);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 440px;
+    padding: 2rem 1.75rem;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0, 240, 255, 0.25);
+    text-align: center;
+}
+
+.modal-close-icon {
+    position: absolute;
+    top: 1rem;
+    right: 1.25rem;
+    background: transparent;
+    border: none;
+    color: #94A3B8;
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.modal-header-icon {
+    font-size: 2.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.modal-title {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin-bottom: 0.5rem;
+}
+
+.modal-subtitle {
+    font-size: 0.85rem;
+    color: #94A3B8;
+    line-height: 1.4;
+    margin-bottom: 1.5rem;
+}
+
+.qr-canvas-wrapper {
+    background: #FFFFFF;
+    padding: 1.25rem;
+    border-radius: 16px;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    margin-bottom: 1.5rem;
+    min-width: 220px;
+    min-height: 220px;
+}
+
+.qr-loading-text {
+    color: #030712;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.mobile-ip-box {
+    text-align: left;
+    margin-bottom: 1.25rem;
+}
+
+.ip-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #00F0FF;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.35rem;
+}
+
+.ip-input-row {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.ip-input-row input {
+    flex: 1;
+    background: #030712;
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    color: #10B981;
+    font-family: monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 0.6rem 0.85rem;
+    border-radius: 8px;
+}
+
+.copy-ip-btn {
+    background: #00F0FF;
+    color: #030712;
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.copy-ip-btn:hover {
+    background: #38BDF8;
+}
+
+.pwa-hint {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 0.85rem;
+    font-size: 0.78rem;
+    color: #CBD5E1;
+    line-height: 1.45;
+}
+
+/* ============================================================================
+   RESPONSIVE MEDIA QUERIES FOR TABLETS & PHONES (MAX-WIDTH: 992px & 768px)
+   ============================================================================ */
+
+@media (max-width: 992px) {
+    .main-nav-links {
+        display: none !important;
+    }
+
+    .mobile-hamburger-btn {
+        display: flex;
+    }
+
+    .navbar {
+        padding: 0.85rem 1.25rem;
+    }
+
+    .brand-heading {
+        font-size: 1.05rem;
+    }
+
+    .hero-title {
+        font-size: 1.8rem;
+        line-height: 1.25;
+    }
+
+    .hero-live-stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.85rem;
+    }
+
+    .executive-action-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .action-bar-left, .action-bar-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .kpi-grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .grid-2-col, .grid-3-col {
+        grid-template-columns: 1fr;
+    }
+
+    .radial-cockpit-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 0.5rem;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .tab-btn {
+        flex: 0 0 auto;
+        padding: 0.6rem 1rem;
+        font-size: 0.78rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-utility-bar {
+        display: none;
+    }
+
+    .hero-section {
+        padding: 1.5rem 1rem;
+    }
+
+    .hero-title {
+        font-size: 1.4rem;
+    }
+
+    .hero-live-stats-bar {
+        grid-template-columns: 1fr;
+    }
+
+    .kpi-grid-4 {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-header-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .role-switcher-group {
+        width: 100%;
+        display: flex;
+    }
+
+    .role-btn {
+        flex: 1;
+        text-align: center;
+    }
+
+    .radial-svg-container {
+        width: 280px;
+        height: 280px;
+    }
+
+    .radial-health-val {
+        font-size: 2.8rem;
+    }
+
+    .bottom-nav-dock {
+        overflow-x: auto;
+        justify-content: flex-start;
+        gap: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    .nav-dock-item {
+        padding: 0.5rem 0.85rem;
+        flex: 0 0 auto;
+    }
+
+    .telemetry-table-wrapper, .table-container, .dtc-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 600px;
+    }
+}
+
+@media (max-width: 480px) {
+    .brand-heading {
+        font-size: 0.95rem;
+    }
+
+    .brand-subtext {
+        display: none;
+    }
+
+    .hero-title {
+        font-size: 1.2rem;
+    }
+
+    .radial-svg-container {
+        width: 240px;
+        height: 240px;
+    }
+
+    .radial-health-val {
+        font-size: 2.4rem;
+    }
+
+    .mobile-qr-modal {
+        padding: 1.5rem 1.15rem;
+    }
+}
+
+
 
 
 
